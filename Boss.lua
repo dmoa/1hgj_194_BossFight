@@ -14,8 +14,12 @@ Boss.new = function()
 
   self.xv = 100
 
+  self.health = 1
+
   self.draw = function()
+    love.graphics.setColor(1, 1, 1, self.health)
     love.graphics.draw(self.currentImage, self.x, self.y)
+    love.graphics.setColor(1, 1, 1, 1)
   end
 
   self.update = function(dt)
@@ -28,6 +32,10 @@ Boss.new = function()
     end
     if player.x + player.currentImage:getWidth() > self.x and player.x < self.x + self.currentImage:getWidth() and player.y + player.currentImage:getHeight() > self.y then
       playing = false
+    end
+    if self.health < 0 then
+      playing = false
+      won = true
     end
   end
 

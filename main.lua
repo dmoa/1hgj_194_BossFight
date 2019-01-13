@@ -12,11 +12,14 @@ function love.load()
 
   playing = true
 
+  won = false
+
   font = love.graphics.newFont(30)
   smallfont = love.graphics.newFont(20)
   againText = love.graphics.newText(font, "TRY AGAIN?\nPRESS SPACE")
+  wellDoneText = love.graphics.newText(font, "WELL DONE\neasy right?")
 
-  mainText = love.graphics.newText(smallfont, "impossible boss fight\nhow long can you survive?")
+  mainText = love.graphics.newText(smallfont, "impossible boss fight\nor is it?")
 
 
   time = 0
@@ -32,7 +35,11 @@ function love.draw()
     player.draw()
     boss.draw()
   else
-    love.graphics.draw(againText, WW / 2 - againText:getWidth() / 2, WH / 2 - againText:getHeight() / 2)
+    if not won then
+      love.graphics.draw(againText, WW / 2 - againText:getWidth() / 2, WH / 2 - againText:getHeight() / 2)
+    else
+      love.graphics.draw(wellDoneText, WW / 2 - wellDoneText:getWidth() / 2, WH / 2 - wellDoneText:getHeight() / 2)
+    end
   end
 end
 
@@ -44,6 +51,7 @@ function love.update(dt)
     player.update(dt)
     boss.update(dt)
     time = time + dt
+    boss.xv = boss.xv + dt * 8
     timeText = love.graphics.newText(smallfont, math.floor(time))
   end
 end
@@ -58,18 +66,27 @@ function love.keypressed(key)
       player.y = 100
       player.xv = 600
       player.yv = 0
-      player.acceleration = 6
+      player.acceleration = 1000
       time = 0
       playing = true
+      player.bulletx = -100
+      player.bullety = -100
+      player.bulletxv = 0
+      boss.health = 1
     else
       player.jump()
     end
   end
+  if key == "m" then
+    player.shoot()
+  end
 end
+
 
 function drawText()
   love.graphics.print("escape to exit", 0, 0)
   love.graphics.print("AD to move", 0, 15)
   love.graphics.print("space to jump", 0, 30)
-  love.graphics.print("you can't win, but you can survive?!", 0, 50)
+  love.graphics.print("m to shoot", 0, 45)
+  love.graphics.print("you can't win, or can you?", 0, 70)
 end
